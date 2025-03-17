@@ -109,3 +109,22 @@ from
 		artist_name in ('Buddy Guy', 'Aerosmith', 'Frank Sinatra', 'Metallica')
 )
 
+-- WITH: to combine two tables, but one of the tables is the result of another calculation
+
+with previous_query as(
+	select
+		customer_id,
+		count(subscription_id) as 'subscriptions'
+	from
+		orders
+	group by
+		customer_id
+)
+select
+	c.customer_name,
+	p.subscriptions
+from
+	previous_query p
+join customers c
+on
+	c.customer_id = p.customer_id
