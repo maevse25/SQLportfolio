@@ -128,3 +128,43 @@ from
 join customers c
 on
 	c.customer_id = p.customer_id
+
+-- INSERT 
+INSERT INTO public.events
+(id, event_type, "location", "name", event_address_region_description, start_date, end_date, medical_event_vod__c)
+VALUES(
+nextval('events_id_seq'::regclass)
+,'Event'
+, 'Hotel Dnipro'
+, 'Best event ever'
+, 'Strategic street, 21, Kyiv, 02020'
+, '2025-05-21 14:30:00.000'
+, '2025-05-21 17:00:00.000'
+, 'a0010000211521');
+
+-- UPDATE 
+update events e 
+set start_date = '2025-05-06 12:00:00.000', 
+end_date = '2025-05-06 17:00:00.000' 
+where medical_event_vod__c = 'a0010000211521'
+
+-- INSERT: using parameters
+DO $$
+DECLARE
+    med_event_id TEXT := 'a0pBC000000XU49YAG'; -- !! change medical_event_vod__c according to your event
+BEGIN
+
+-- Attendee #1
+INSERT INTO public.attendees
+(id, 											account_vod__c, 	user_vod__c, 	medical_event_vod__c, status, code, receive_notification)
+VALUES(nextval('attendees_id_seq'::regclass), '001AK000000000026', NULL, 			med_event_id, 'CRM', generate_random_code(), FALSE);
+
+-- Attendee #2
+INSERT INTO public.attendees
+(id, 											account_vod__c, 	user_vod__c, 	medical_event_vod__c, status, code, receive_notification)
+VALUES(nextval('attendees_id_seq'::regclass), '001d01ff350363a4ae', NULL, 			med_event_id, 'CRM', generate_random_code(), FALSE);
+
+END
+$$;
+
+-- 
